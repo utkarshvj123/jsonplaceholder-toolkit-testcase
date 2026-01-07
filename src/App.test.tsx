@@ -1,9 +1,27 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import App from "./App";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock("./pages/PostPage", () => () => <div>PostPage</div>);
+jest.mock("./pages/PostDetail", () => () => <div>PostDetail</div>);
+
+describe("App routing", () => {
+  test("renders PostPage on /posts", () => {
+    render(
+      <MemoryRouter initialEntries={["/posts"]}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/PostPage/i)).toBeInTheDocument();
+  });
+
+  test("renders PostDetail on /posts/:postId", () => {
+    render(
+      <MemoryRouter initialEntries={["/posts/1"]}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/PostDetail/i)).toBeInTheDocument();
+  });
 });
